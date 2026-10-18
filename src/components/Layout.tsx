@@ -118,7 +118,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-[#6D4C2E] dark:text-[#F2E3D5] font-medium">
               <Download className="w-3.5 h-3.5 text-[#A66E2E]" />
-              <span>Install <strong>CampusBite</strong> for instantaneous classroom ordering.</span>
+              <span>Install <strong>SUK</strong> for instantaneous classroom ordering.</span>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <button
@@ -130,7 +130,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
               <button
                 onClick={() => {
                   setInstallBannerDismissed(true);
-                  sessionStorage.setItem('cb_pwa_dismissed', '1');
+                  sessionStorage.setItem('suk_pwa_dismissed', '1');
                 }}
                 className="p-1 text-[#6D4C2E] dark:text-gray-400 hover:opacity-75"
                 aria-label="Dismiss"
@@ -154,7 +154,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
               </div>
               <div className="flex flex-col">
                 <span className="font-display font-extrabold text-lg tracking-tight text-[#2B1D12] dark:text-white leading-none">
-                  {settings.brandName}
+                  SUK
                 </span>
                 <span className="text-[10px] font-semibold text-[#A66E2E] dark:text-[#D9A94D] tracking-wide mt-0.5">
                   Campus Dining
@@ -452,7 +452,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                   <UtensilsCrossed className="w-4 h-4 text-[#D9A94D]" />
                 </div>
                 <span className="font-display font-black text-xl tracking-tight text-[#2B1D12] dark:text-white">
-                  {settings.brandName}
+                  SUK
                 </span>
               </Link>
               <p className="text-xs text-[#7E6857] dark:text-[#B8A696] max-w-sm">
@@ -492,7 +492,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           {/* Bottom Row: Copyright, Operational Status, and Hours */}
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
             <p className="text-[11px] text-[#7E6857]/80 dark:text-[#B8A696]/80">
-              © {new Date().getFullYear()} {settings.brandName}. Designed for zero-wait campus dining.
+              © {new Date().getFullYear()} SUK. Designed for zero-wait campus dining.
             </p>
 
             {/* Live Operational Status Indicator */}

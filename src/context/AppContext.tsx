@@ -25,17 +25,27 @@ import {
 import { calculateOrderPrepDuration, generateOrderId } from '../utils/time';
 import { calculateOrderTotals } from '../utils/price';
 
+if (typeof window !== 'undefined') {
+  try {
+    Object.keys(localStorage).forEach(key => {
+      if (!key.startsWith('suk_v2_') && key !== 'suk_theme') {
+        localStorage.removeItem(key);
+      }
+    });
+  } catch {}
+}
+
 const STORAGE_KEYS = {
-  FOODS: 'cb_v5_foods',
-  CANTEENS: 'cb_v5_canteens',
-  SLOTS: 'cb_v5_slots',
-  CART: 'cb_v5_cart',
-  ORDERS: 'cb_v5_orders',
-  FAVS: 'cb_v5_favs',
-  PROFILE: 'cb_v5_profile',
-  THEME: 'cb_v5_theme',
-  USERS: 'cb_v5_staff_users',
-  SETTINGS: 'cb_v5_settings'
+  FOODS: 'suk_v2_foods',
+  CANTEENS: 'suk_v2_canteens',
+  SLOTS: 'suk_v2_slots',
+  CART: 'suk_v2_cart',
+  ORDERS: 'suk_v2_orders',
+  FAVS: 'suk_v2_favs',
+  PROFILE: 'suk_v2_profile',
+  THEME: 'suk_v2_theme',
+  USERS: 'suk_v2_staff_users',
+  SETTINGS: 'suk_v2_settings'
 };
 
 function safeLoad<T>(key: string, fallback: T): T {
@@ -44,8 +54,12 @@ function safeLoad<T>(key: string, fallback: T): T {
     if (!raw) return fallback;
     const parsed = JSON.parse(raw);
     // Sanitize any historical personal names
-    if (typeof parsed === 'object' && parsed !== null && (parsed as any).name?.includes('Aman')) {
+    if (typeof parsed === 'object' && parsed !== null && (parsed as any).name && (parsed as any).name !== 'Campus Member') {
       return fallback;
+    }
+    // Ensure brand is always SUK
+    if (typeof parsed === 'object' && parsed !== null && (parsed as any).brandName) {
+      (parsed as any).brandName = 'SUK';
     }
     return parsed as T;
   } catch {
@@ -106,7 +120,8 @@ interface AppContextType {
     cancellationReason?: string
   ) => void;
   advanceOrderStatus: (orderId: string) => void;
-  cancelOrder: (orderId: string, reason?: string) => void;
+  cancelOrder: (orderId: string, reason?: string, refundOption?: 'wallet' | 'counter') => void;
+  claimWalletRefund: (orderId: string) => void;
   reorderPastOrder: (order: Order) => void;
   upsertFoodItem: (item: FoodItem) => void;
   deleteFoodItem: (id: string) => void;
@@ -175,7 +190,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Realtime multi-tab synchronization with BroadcastChannel & storage events
   useEffect(() => {
     try {
-      broadcastRef.current = new BroadcastChannel('campusbite_sync');
+      broadcastRef.current = new BroadcastChannel('suk_sync');
       broadcastRef.current.onmessage = (event) => {
         if (!event.data) return;
         const { type, payload } = event.data;
@@ -489,8 +504,77 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const cancelOrder = (orderId: string, reason?: string) => {
-    updateOrderStatus(orderId, 'Cancelled', undefined, reason || 'Order cancelled by customer');
+  const cancelOrder = (
+    orderId: string,
+    reason?: string,
+    refundOption: 'wallet' | 'counter' = 'wallet'
+  ) => {
+    const targetOrder = orders.find((o) => o.id === orderId);
+    const refundNote =
+      refundOption === 'wallet'
+        ? `Refund of ₹${targetOrder?.total || 0} credited to Student Wallet`
+        : `Refund of ₹${targetOrder?.total || 0} scheduled for collection at Canteen Counter`;
+
+    updateOrderStatus(
+      orderId,
+      'Cancelled',
+      `Order cancelled (${reason || 'Customer requested'}). ${refundNote}`,
+      reason || 'Order cancelled by customer'
+    );
+
+    setOrders((prev) => {
+      const updated = prev.map((o) => {
+        if (o.id !== orderId) return o;
+        return {
+          ...o,
+          refundOption,
+          refundStatus:
+            refundOption === 'wallet'
+              ? ('Refunded to Wallet' as const)
+              : ('Pending Counter Pickup' as const)
+        };
+      });
+      broadcast('ORDERS_UPDATE', updated);
+      return updated;
+    });
+
+    if (targetOrder && refundOption === 'wallet') {
+      setProfile((prev) => ({
+        ...prev,
+        mealCardBalance: prev.mealCardBalance + targetOrder.total
+      }));
+      notify(`₹${targetOrder.total} credited instantly to your Student Wallet!`, 'success');
+    } else if (targetOrder && refundOption === 'counter') {
+      notify(`Order cancelled. You can collect your refund of ₹${targetOrder.total} at the canteen counter.`, 'info');
+    }
+  };
+
+  const claimWalletRefund = (orderId: string) => {
+    const targetOrder = orders.find((o) => o.id === orderId);
+    if (!targetOrder) return;
+    if (targetOrder.refundStatus === 'Refunded to Wallet') {
+      notify('This refund has already been credited to your Student Wallet.', 'info');
+      return;
+    }
+
+    setOrders((prev) => {
+      const updated = prev.map((o) => {
+        if (o.id !== orderId) return o;
+        return {
+          ...o,
+          refundOption: 'wallet' as const,
+          refundStatus: 'Refunded to Wallet' as const
+        };
+      });
+      broadcast('ORDERS_UPDATE', updated);
+      return updated;
+    });
+
+    setProfile((prev) => ({
+      ...prev,
+      mealCardBalance: prev.mealCardBalance + targetOrder.total
+    }));
+    notify(`₹${targetOrder.total} credited instantly to your Student Wallet!`, 'success');
   };
 
   const reorderPastOrder = (order: Order) => {
@@ -633,6 +717,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         updateOrderStatus,
         advanceOrderStatus,
         cancelOrder,
+        claimWalletRefund,
         reorderPastOrder,
         upsertFoodItem,
         deleteFoodItem,

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'campusbite-cache-v1';
+const CACHE_NAME = 'suk-cache-v2';
 const ASSETS = [
   '/',
   '/index.html',

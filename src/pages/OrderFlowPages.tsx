@@ -36,6 +36,7 @@ import {
   useLiveRelativeTime,
   getRelativeTimeString
 } from '../utils/time';
+import { PickupQRCode } from '../components/PickupQRCode';
 
 /* ==========================================================================
    CART PAGE
@@ -673,7 +674,7 @@ export const CheckoutPage: React.FC = () => {
                   <QrCode className="w-28 h-28 text-[#2D1F14]" />
                 </div>
                 <p className="text-xs text-[#7E6857] dark:text-[#B8A696]">
-                  Simulated UPI handle: <strong>campusbite@upi</strong>
+                  Simulated UPI handle: <strong>suk@upi</strong>
                 </p>
               </div>
             )}
@@ -834,6 +835,11 @@ export const OrderConfirmationPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Counter Pickup QR Pass */}
+        <div className="pt-2">
+          <PickupQRCode order={order} />
+        </div>
+
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <Link
             to={`/track/${order.id}`}
@@ -861,11 +867,12 @@ const TRACKING_STAGES: OrderStatus[] = ['Placed', 'Accepted', 'Preparing', 'Read
 
 export const OrderTrackingPage: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
-  const { orders, updateOrderStatus, advanceOrderStatus, cancelOrder } = useApp();
+  const { orders, updateOrderStatus, advanceOrderStatus, cancelOrder, claimWalletRefund, profile } = useApp();
   const order = orders.find((o) => o.id === orderId) || orders[0];
 
   const [confirmCancelModal, setConfirmCancelModal] = useState(false);
   const [cancelReason, setCancelReason] = useState('Change of timetable');
+  const [refundChoice, setRefundChoice] = useState<'wallet' | 'counter'>('wallet');
   const [confirmCollectModal, setConfirmCollectModal] = useState(false);
 
   // Dynamic live relative time for placement
@@ -947,6 +954,9 @@ export const OrderTrackingPage: React.FC = () => {
         </motion.div>
       )}
 
+      {/* Official SUK Express Pickup QR Pass */}
+      <PickupQRCode order={order} />
+
       {/* Visual Status Stepper */}
       <div className="bg-white dark:bg-[#1E1510] border border-[#E6CFBC] dark:border-[#3D2D1F] rounded-3xl p-6 sm:p-8 shadow-warm-sm">
         <div className="flex items-center justify-between mb-6">
@@ -969,16 +979,57 @@ export const OrderTrackingPage: React.FC = () => {
         </div>
 
         {order.status === 'Cancelled' ? (
-          <div className="p-5 rounded-2xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 text-rose-700 dark:text-rose-200 text-xs font-bold space-y-1">
-            <div className="flex items-center gap-2">
-              <XCircle className="w-4 h-4" />
+          <div className="p-6 rounded-3xl bg-rose-50/60 dark:bg-rose-950/20 border-2 border-rose-200 dark:border-rose-900/40 space-y-4">
+            <div className="flex items-center gap-2 text-rose-700 dark:text-rose-300 text-xs font-bold">
+              <XCircle className="w-4 h-4 shrink-0" />
               <span>This order was cancelled on {formatDateTime(order.cancelledAt || order.updatedAt)}.</span>
             </div>
             {order.cancellationReason && (
-              <p className="text-[11px] font-normal text-rose-600 dark:text-rose-300">
-                Reason: {order.cancellationReason}
+              <p className="text-[11px] text-[#7E6857] dark:text-[#B8A696]">
+                Cancellation Reason: <strong>{order.cancellationReason}</strong>
               </p>
             )}
+
+            {/* Refund Options Resolution Box */}
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#1E1510] border border-[#E6CFBC] dark:border-[#3D2D1F] space-y-3 shadow-warm-xs">
+              <div className="flex items-center justify-between">
+                <span className="font-display font-black text-xs text-[#2B1D12] dark:text-white flex items-center gap-1.5">
+                  <Banknote className="w-4 h-4 text-[#A66E2E]" /> Refund Policy & Resolution
+                </span>
+                <span className="font-mono font-bold text-xs text-[#6D4C2E] dark:text-[#D9A94D]">
+                  Refund Amount: {formatINR(order.total)}
+                </span>
+              </div>
+              <p className="text-xs text-[#7E6857] dark:text-[#B8A696] leading-relaxed">
+                When an order is cancelled, your refund can be <strong>collected directly from the canteen counter</strong> or <strong>credited to your student wallet</strong> available in the app.
+              </p>
+
+              {order.refundOption === 'wallet' || order.refundStatus === 'Refunded to Wallet' ? (
+                <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 text-xs text-emerald-800 dark:text-emerald-200 flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 font-bold">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>{formatINR(order.total)} credited to your Student Wallet.</span>
+                  </div>
+                  <span className="font-bold text-[11px] px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/60">
+                    Wallet Balance: {formatINR(profile.mealCardBalance)}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1 border-t border-[#E6CFBC]/60 dark:border-[#3D2D1F]">
+                  <div className="text-[11px] text-[#7E6857] dark:text-[#B8A696]">
+                    <span className="font-bold text-[#2B1D12] dark:text-white block">Counter Collection Option:</span>
+                    Present Token #{order.id} at the express counter to receive your cash / POS reversal.
+                  </div>
+                  <button
+                    onClick={() => claimWalletRefund(order.id)}
+                    className="px-4 py-2 rounded-xl bg-[#6D4C2E] hover:bg-[#A66E2E] text-[#F2E3D5] font-bold text-xs shadow-sm transition-all shrink-0 flex items-center justify-center gap-1.5"
+                  >
+                    <Wallet className="w-3.5 h-3.5 text-[#D9A94D]" />
+                    Credit to Student Wallet Instead
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
@@ -1238,19 +1289,78 @@ export const OrderTrackingPage: React.FC = () => {
                 <option value="Other">Other</option>
               </select>
             </div>
+            <div className="text-left space-y-2 pt-1">
+              <label className="text-[11px] font-bold block text-[#2B1D12] dark:text-white">
+                How would you like to receive your refund of {formatINR(order.total)}?
+              </label>
+              <div className="space-y-2">
+                <label
+                  onClick={() => setRefundChoice('wallet')}
+                  className={`p-3 rounded-2xl border flex items-start gap-2.5 cursor-pointer text-xs transition-all ${
+                    refundChoice === 'wallet'
+                      ? 'border-[#A66E2E] bg-[#F2E3D5] dark:bg-[#281D15] ring-2 ring-[#D9A94D]/30'
+                      : 'border-[#E6CFBC] bg-[#FAF6F0]/60 dark:bg-[#140E0A]'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="refundMethodChoice"
+                    value="wallet"
+                    checked={refundChoice === 'wallet'}
+                    onChange={() => setRefundChoice('wallet')}
+                    className="accent-[#6D4C2E] mt-0.5"
+                  />
+                  <div>
+                    <span className="font-extrabold text-[#6D4C2E] dark:text-[#D9A94D] block">
+                      ⚡ Instant Student Wallet
+                    </span>
+                    <span className="text-[10px] text-[#7E6857] dark:text-[#B8A696] leading-tight block mt-0.5">
+                      {formatINR(order.total)} is credited instantly to your in-app meal wallet balance.
+                    </span>
+                  </div>
+                </label>
+
+                <label
+                  onClick={() => setRefundChoice('counter')}
+                  className={`p-3 rounded-2xl border flex items-start gap-2.5 cursor-pointer text-xs transition-all ${
+                    refundChoice === 'counter'
+                      ? 'border-[#A66E2E] bg-[#F2E3D5] dark:bg-[#281D15] ring-2 ring-[#D9A94D]/30'
+                      : 'border-[#E6CFBC] bg-[#FAF6F0]/60 dark:bg-[#140E0A]'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="refundMethodChoice"
+                    value="counter"
+                    checked={refundChoice === 'counter'}
+                    onChange={() => setRefundChoice('counter')}
+                    className="accent-[#6D4C2E] mt-0.5"
+                  />
+                  <div>
+                    <span className="font-extrabold text-[#2B1D12] dark:text-white block">
+                      🏪 Collect at Canteen Counter
+                    </span>
+                    <span className="text-[10px] text-[#7E6857] dark:text-[#B8A696] leading-tight block mt-0.5">
+                      Show your Token #{order.id} at the express counter to collect your cash or POS reversal.
+                    </span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
             <div className="flex gap-2 pt-2">
               <button
                 onClick={() => {
-                  cancelOrder(order.id, cancelReason);
+                  cancelOrder(order.id, cancelReason, refundChoice);
                   setConfirmCancelModal(false);
                 }}
-                className="flex-1 py-2 rounded-xl bg-rose-600 text-white text-xs font-bold"
+                className="flex-1 py-2.5 rounded-xl bg-rose-600 text-white text-xs font-bold shadow-sm"
               >
                 Yes, Cancel Order
               </button>
               <button
                 onClick={() => setConfirmCancelModal(false)}
-                className="flex-1 py-2 rounded-xl bg-gray-200 dark:bg-gray-800 text-xs font-semibold"
+                className="flex-1 py-2.5 rounded-xl bg-gray-200 dark:bg-gray-800 text-xs font-semibold"
               >
                 Keep Order
               </button>
@@ -1322,10 +1432,11 @@ export const OrderHistoryPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <span className="font-display font-black text-lg text-[#2B1D12] dark:text-white mr-2">
                 {formatINR(o.total)}
               </span>
+              <PickupQRCode order={o} compact />
               <Link
                 to={`/track/${o.id}`}
                 className="px-4 py-2 rounded-xl border border-[#E6CFBC] dark:border-[#3D2D1F] text-xs font-bold text-[#2B1D12] dark:text-white hover:bg-[#FAF6F0] transition-colors"

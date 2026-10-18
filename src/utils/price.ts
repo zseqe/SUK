@@ -1,5 +1,5 @@
 /**
- * Price and currency calculation utilities for CampusBite.
+ * Price and currency calculation utilities for SUK.
  * Ensures consistent math across menu, cart, checkout, receipt, and dashboard.
  */
 

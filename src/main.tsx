@@ -5,6 +5,11 @@ import './index.css';
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (const registration of registrations) {
+        registration.update();
+      }
+    });
     navigator.serviceWorker.register('/sw.js').catch(() => {
       // Service worker registration optional during local dev
     });

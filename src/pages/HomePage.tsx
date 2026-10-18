@@ -125,7 +125,7 @@ export const HomePage: React.FC = () => {
                   LIVE BREAK-TIME TICKET
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full bg-[#F2E3D5] dark:bg-[#281D15] text-[#6D4C2E] dark:text-[#D9A94D] font-black text-[11px] border border-[#D9A94D]/30">
-                  Token #{activeOrderPreview?.id || 'CB-20261018-0042'}
+                  Token #{activeOrderPreview?.id || 'SUK-20261018-0042'}
                 </span>
               </div>
               <p className="font-display font-bold text-sm text-[#2B1D12] dark:text-white">
@@ -134,7 +134,7 @@ export const HomePage: React.FC = () => {
               <div className="flex items-center justify-between text-xs text-[#7E6857] dark:text-[#B8A696] mt-1.5 pt-1.5 border-t border-[#E6CFBC]/60 dark:border-[#3D2D1F]">
                 <span>Slot: {activeOrderPreview?.pickupSlotLabel?.split('(')[0] || 'Lunch Peak (01:00 PM)'}</span>
                 <Link
-                  to={`/track/${activeOrderPreview?.id || 'CB-20261018-0042'}`}
+                  to={`/track/${activeOrderPreview?.id || 'SUK-20261018-0042'}`}
                   className="text-[#A66E2E] dark:text-[#D9A94D] font-bold hover:underline flex items-center gap-1"
                 >
                   Live Kitchen Tracker →
@@ -152,7 +152,7 @@ export const HomePage: React.FC = () => {
             Zero-Wait Campus Workflow
           </span>
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold mt-1 text-[#2B1D12] dark:text-white">
-            How CampusBite Works
+            How SUK Works
           </h2>
           <p className="text-sm text-[#7E6857] dark:text-[#B8A696] mt-2 leading-relaxed">
             Engineered around class timetables and kitchen capacities so students never spend their short break waiting in line.

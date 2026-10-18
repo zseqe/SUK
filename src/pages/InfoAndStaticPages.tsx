@@ -23,7 +23,7 @@ export const AboutPage: React.FC = () => (
         University Dining Cloud
       </span>
       <h1 className="font-display text-3xl sm:text-4xl font-black text-[#2B1D12] dark:text-white mt-1">
-        About CampusBite
+        About SUK
       </h1>
     </div>
     <p className="text-base text-[#7E6857] dark:text-[#B8A696] leading-relaxed">
@@ -36,7 +36,7 @@ export const AboutPage: React.FC = () => (
           Decoupled Pre-Ordering
         </h3>
         <p className="text-xs text-[#7E6857] dark:text-[#B8A696] leading-relaxed">
-          CampusBite separates ordering from physical counter crowding. Students browse live availability from classrooms, lock in a guaranteed 15-minute pickup slot, and walk straight to the express pickup pass counter when their order is ready.
+          SUK separates ordering from physical counter crowding. Students browse live availability from classrooms, lock in a guaranteed 15-minute pickup slot, and walk straight to the express pickup pass counter when their order is ready.
         </p>
       </div>
 
@@ -250,12 +250,12 @@ export const FaqPage: React.FC = () => {
       a: 'Select dishes from any campus canteen, choose an available 15-minute break slot, and place your order. Your kitchen token reference is generated immediately.'
     },
     {
-      q: 'Which payment methods are supported on CampusBite?',
-      a: 'CampusBite supports instant Campus Student Meal Cards, fast UPI QR codes, debit/credit cards, and cash or POS settlement at the express counter.'
+      q: 'Which payment methods are supported on SUK?',
+      a: 'SUK supports instant Campus Student Meal Cards, fast UPI QR codes, debit/credit cards, and cash or POS settlement at the express counter.'
     },
     {
-      q: 'Can I cancel an order once placed?',
-      a: 'Orders in the "Placed" stage can be cancelled directly from your Order Tracking page before the kitchen staff accepts and begins cooking the ticket.'
+      q: 'Can I cancel an order once placed and how do refunds work?',
+      a: 'Orders in the "Placed" stage can be cancelled directly from your Order Tracking page before cooking begins. When an order is cancelled, refunds can either be collected directly from the canteen counter or credited instantly to the student wallet available in the app.'
     },
     {
       q: 'Can I order dishes from multiple canteens in a single order?',
@@ -353,13 +353,13 @@ export const PolicyPage: React.FC<{ type: 'privacy' | 'terms' | 'refund' }> = ({
 
       <div className="bg-white dark:bg-[#1E1510] border border-[#E6CFBC] dark:border-[#3D2D1F] rounded-3xl p-8 space-y-4 text-xs text-[#7E6857] dark:text-[#B8A696] leading-relaxed shadow-warm-sm">
         <p>
-          <strong className="text-[#2B1D12] dark:text-white">1. University Data Protection:</strong> CampusBite encrypts all student identification numbers, meal card accounts, and contact records in compliance with academic privacy regulations.
+          <strong className="text-[#2B1D12] dark:text-white">1. University Data Protection:</strong> SUK encrypts all student identification numbers, meal card accounts, and contact records in compliance with academic privacy regulations.
         </p>
         <p>
           <strong className="text-[#2B1D12] dark:text-white">2. Payment & Pre-Order Policy:</strong> All digital orders processed through the platform lock in preparation slots at the designated campus kitchen. Orders not picked up within 20 minutes of the scheduled window may be cleared from the express pass station.
         </p>
         <p>
-          <strong className="text-[#2B1D12] dark:text-white">3. Cancellations & Adjustments:</strong> Cancellations are permitted while an order status is marked as "Placed". Once kitchen staff accept the order and initiate cooking, cancellations cannot be honored.
+          <strong className="text-[#2B1D12] dark:text-white">3. Cancellations & Refund Policy:</strong> Cancellations are permitted while an order status is marked as "Placed". When an order is cancelled, refunds can either be collected directly in cash/POS from the canteen counter or credited instantly to the student wallet available in the app.
         </p>
       </div>
     </div>
@@ -375,7 +375,7 @@ export const OfflineFallbackPage: React.FC = () => {
       </div>
       <h1 className="font-display text-3xl font-black text-[#2B1D12] dark:text-white">Offline Mode Active</h1>
       <p className="text-xs sm:text-sm text-[#7E6857] dark:text-[#B8A696] max-w-lg mx-auto leading-relaxed">
-        CampusBite caches static assets and preserves your local menu ({foods.length} dishes) and recent orders ({orders.length} orders) inside your device even when campus Wi-Fi drops.
+        SUK caches static assets and preserves your local menu ({foods.length} dishes) and recent orders ({orders.length} orders) inside your device even when campus Wi-Fi drops.
       </p>
       <div className="flex justify-center gap-3">
         <Link to="/menu" className="px-6 py-3 rounded-2xl bg-[#6D4C2E] text-[#F2E3D5] text-xs font-bold shadow-warm-sm">
@@ -400,7 +400,7 @@ export const NotFoundPage: React.FC = () => (
       to="/"
       className="inline-block mt-4 px-6 py-3 rounded-2xl bg-[#6D4C2E] text-[#F2E3D5] text-xs font-bold shadow-warm-sm"
     >
-      Return to CampusBite Home
+      Return to SUK Home
     </Link>
   </div>
 );

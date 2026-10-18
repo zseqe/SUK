@@ -61,7 +61,7 @@ export const AdminDashboardPage: React.FC = () => {
     const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify({ orders, canteens, staffUsers, settings }, null, 2));
     const dlAnchorElem = document.createElement('a');
     dlAnchorElem.setAttribute('href', dataStr);
-    dlAnchorElem.setAttribute('download', `campusbite_audit_${new Date().toISOString().split('T')[0]}.json`);
+    dlAnchorElem.setAttribute('download', `suk_audit_${new Date().toISOString().split('T')[0]}.json`);
     dlAnchorElem.click();
   };
 
@@ -393,7 +393,7 @@ export const ProfilePage: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-[10px] uppercase font-bold tracking-widest text-[#D9A94D] block">University Card</span>
-                <span className="font-display font-extrabold text-base">CampusBite Meal Pass</span>
+                <span className="font-display font-extrabold text-base">SUK Meal Pass</span>
               </div>
               <Wallet className="w-6 h-6 text-[#D9A94D]" />
             </div>

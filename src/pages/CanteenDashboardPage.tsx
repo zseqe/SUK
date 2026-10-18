@@ -19,7 +19,9 @@ import {
   Eye,
   AlertTriangle,
   Flame,
-  Check
+  Check,
+  QrCode,
+  ShieldCheck
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { FoodItem, Order, OrderStatus, CategoryId } from '../types';
@@ -42,13 +44,19 @@ export const CanteenDashboardPage: React.FC = () => {
     toggleFoodAvailability,
     upsertFoodItem,
     deleteFoodItem,
-    upsertSlot
+    upsertSlot,
+    notify
   } = useApp();
 
   const [tab, setTab] = useState<'overview' | 'orders' | 'kds' | 'menu' | 'slots' | 'reports'>('overview');
   const [orderSearch, setOrderSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'slot'>('newest');
+
+  // Scanner Modal State
+  const [scannerOpen, setScannerOpen] = useState(false);
+  const [scannedInput, setScannedInput] = useState('');
+  const [scannedMatchedOrder, setScannedMatchedOrder] = useState<Order | null>(null);
 
   // Inspection Modal State
   const [inspectedOrder, setInspectedOrder] = useState<Order | null>(null);
@@ -165,6 +173,13 @@ export const CanteenDashboardPage: React.FC = () => {
           </span>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => setScannerOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#6D4C2E] hover:bg-[#A66E2E] text-[#F2E3D5] font-bold text-xs shadow-sm transition-all"
+          >
+            <QrCode className="w-3.5 h-3.5 text-[#D9A94D]" />
+            Scan / Claim Token
+          </button>
           <span className="px-2.5 py-0.5 rounded-lg bg-[#6D4C2E] text-[#F2E3D5] font-extrabold text-[10px] uppercase tracking-wider">
             Station: Quad Central
           </span>
@@ -894,6 +909,177 @@ export const CanteenDashboardPage: React.FC = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* Canteen Express QR Scanner & Claim Modal */}
+      {scannerOpen && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#1E1510] border-2 border-[#D9A94D] rounded-3xl max-w-lg w-full p-6 sm:p-7 space-y-5 shadow-2xl relative">
+            <button
+              onClick={() => {
+                setScannerOpen(false);
+                setScannedMatchedOrder(null);
+                setScannedInput('');
+              }}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white p-1 text-base font-bold"
+            >
+              ✕
+            </button>
+
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-[#6D4C2E] text-[#D9A94D] flex items-center justify-center shadow-sm">
+                <QrCode className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-display font-extrabold text-base text-[#2B1D12] dark:text-white">
+                  Counter Express Scanner & Food Claim
+                </h3>
+                <p className="text-[11px] text-[#7E6857] dark:text-[#B8A696]">
+                  Scan student's mobile QR code or type token ID to verify and hand over meals.
+                </p>
+              </div>
+            </div>
+
+            {/* Simulated Laser Scanner Viewfinder */}
+            <div className="relative rounded-2xl bg-black/90 p-5 text-center overflow-hidden border border-[#D9A94D]/40">
+              <div className="absolute inset-x-0 h-0.5 bg-red-500 shadow-[0_0_12px_#ef4444] animate-bounce pointer-events-none" />
+              <div className="w-20 h-20 mx-auto border-2 border-dashed border-[#D9A94D]/60 rounded-xl flex items-center justify-center mb-2">
+                <QrCode className="w-10 h-10 text-[#D9A94D]/80 animate-pulse" />
+              </div>
+              <span className="text-[10px] uppercase font-mono font-bold tracking-widest text-[#D9A94D]">
+                SUK Optical Token Scanner Ready
+              </span>
+            </div>
+
+            {/* Token Input / Search */}
+            <div>
+              <label className="text-xs font-bold block mb-1 text-[#2B1D12] dark:text-white">
+                Enter or Paste Token ID (e.g. SUK-20261018-0042 or 0042)
+              </label>
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 absolute left-3 top-3 text-gray-400" />
+                <input
+                  type="text"
+                  autoFocus
+                  value={scannedInput}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setScannedInput(val);
+                    const matched = orders.find((o) =>
+                      o.id.toLowerCase().includes(val.toLowerCase().trim()) ||
+                      val.includes(o.id)
+                    );
+                    setScannedMatchedOrder(val.trim() ? matched || null : null);
+                  }}
+                  placeholder="Scan or type token..."
+                  className="w-full pl-9 pr-3 py-2 text-xs font-mono font-bold rounded-xl border border-[#E6CFBC] bg-[#FAF6F0] dark:bg-[#140E0A] text-[#2B1D12] dark:text-white outline-none focus:border-[#6D4C2E]"
+                />
+              </div>
+            </div>
+
+            {/* Quick Pick: Ready for Pickup Orders */}
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#7E6857] dark:text-[#B8A696] block mb-1.5">
+                Ready for Handover ({readyOrders.length})
+              </span>
+              <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto pr-1">
+                {readyOrders.length === 0 ? (
+                  <span className="text-[11px] text-gray-400 italic">No orders currently waiting at counter</span>
+                ) : (
+                  readyOrders.map((ro) => (
+                    <button
+                      key={ro.id}
+                      type="button"
+                      onClick={() => {
+                        setScannedInput(ro.id);
+                        setScannedMatchedOrder(ro);
+                      }}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold border transition-colors ${
+                        scannedMatchedOrder?.id === ro.id
+                          ? 'bg-[#6D4C2E] text-white border-[#6D4C2E]'
+                          : 'bg-[#FAF6F0] dark:bg-[#201711] border-[#E6CFBC] text-[#2B1D12] dark:text-white hover:border-[#D9A94D]'
+                      }`}
+                    >
+                      #{ro.id.slice(-4)} • {ro.customerName}
+                    </button>
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* Matched Order Details Card */}
+            {scannedMatchedOrder && (
+              <div className="p-4 rounded-2xl bg-[#F2E3D5] dark:bg-[#281D15] border border-[#D9A94D] space-y-2.5">
+                <div className="flex items-center justify-between text-xs">
+                  <div>
+                    <span className="font-display font-extrabold text-sm text-[#2B1D12] dark:text-white">
+                      Token #{scannedMatchedOrder.id}
+                    </span>
+                    <p className="text-[11px] text-[#7E6857] dark:text-[#B8A696]">
+                      {scannedMatchedOrder.customerName} ({scannedMatchedOrder.studentId || 'Member'})
+                    </p>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full bg-white dark:bg-black/40 text-[10px] font-black text-[#6D4C2E] dark:text-[#D9A94D]">
+                    {scannedMatchedOrder.status}
+                  </span>
+                </div>
+
+                <div className="text-[11px] border-t border-[#6D4C2E]/10 dark:border-[#D9A94D]/20 pt-2 text-[#2B1D12] dark:text-white">
+                  <strong>Dishes to handover:</strong>{' '}
+                  {scannedMatchedOrder.items.map((i) => `${i.quantity}x ${i.name}`).join(', ')}
+                </div>
+
+                <div className="flex justify-between items-center text-xs font-bold pt-1">
+                  <span className="text-[#7E6857] dark:text-[#B8A696]">
+                    Slot: {scannedMatchedOrder.pickupSlotLabel}
+                  </span>
+                  <span className="text-[#6D4C2E] dark:text-[#D9A94D]">
+                    {formatINR(scannedMatchedOrder.total)} ({scannedMatchedOrder.paymentStatus})
+                  </span>
+                </div>
+
+                <div className="pt-2">
+                  {scannedMatchedOrder.status === 'Completed' || scannedMatchedOrder.status === 'Collected' ? (
+                    <div className="p-2 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-bold flex items-center justify-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4" /> This order has already been claimed & collected.
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        updateOrderStatus(
+                          scannedMatchedOrder.id,
+                          'Completed',
+                          'Verified via Counter QR Scanner & food handed over'
+                        );
+                        notify(`Verified Token #${scannedMatchedOrder.id}! Food handed over to ${scannedMatchedOrder.customerName}.`, 'success');
+                        setScannerOpen(false);
+                        setScannedMatchedOrder(null);
+                        setScannedInput('');
+                      }}
+                      className="w-full py-2.5 rounded-xl bg-[#6D4C2E] hover:bg-[#A66E2E] text-white font-bold text-xs shadow-md transition-colors flex items-center justify-center gap-2"
+                    >
+                      <Check className="w-4 h-4 text-[#D9A94D]" />
+                      ✓ Verify QR & Hand Over Food to Student
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-end pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setScannerOpen(false);
+                  setScannedMatchedOrder(null);
+                  setScannedInput('');
+                }}
+                className="px-4 py-2 rounded-xl border border-[#E6CFBC] text-xs font-semibold text-[#7E6857]"
+              >
+                Close Scanner
+              </button>
+            </div>
           </div>
         </div>
       )}

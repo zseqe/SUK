@@ -118,15 +118,15 @@ export function calculateOrderPrepDuration(
 }
 
 /**
- * Generates a standard CampusBite Order ID formatted as CB-YYYYMMDD-XXXX
- * (e.g. CB-20261018-0042).
+ * Generates a standard SUK Order ID formatted as SUK-YYYYMMDD-XXXX
+ * (e.g. SUK-20261018-0042).
  */
 export function generateOrderId(date: Date = new Date()): string {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, '0');
   const d = String(date.getDate()).padStart(2, '0');
   const rand = String(Math.floor(10 + Math.random() * 990)).padStart(4, '0');
-  return `CB-${y}${m}${d}-${rand}`;
+  return `SUK-${y}${m}${d}-${rand}`;
 }
 
 /**

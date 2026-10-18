@@ -129,6 +129,8 @@ export interface Order {
   status: OrderStatus;
   notes?: string;
   isOfflineCreated?: boolean;
+  refundOption?: 'wallet' | 'counter';
+  refundStatus?: 'Refunded to Wallet' | 'Pending Counter Pickup' | 'Collected at Counter';
 }
 
 export interface UserProfile {

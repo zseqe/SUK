@@ -338,7 +338,7 @@ const order3EstReady = new Date(now - 1000 * 60 * 97).toISOString();
 
 export const INITIAL_ORDERS: Order[] = [
   {
-    id: 'CB-20261018-0042',
+    id: 'SUK-20261018-0042',
     createdAt: order1Placed,
     placedAt: order1Placed,
     updatedAt: order1PrepStart,
@@ -387,7 +387,7 @@ export const INITIAL_ORDERS: Order[] = [
     ]
   },
   {
-    id: 'CB-20261018-0038',
+    id: 'SUK-20261018-0038',
     createdAt: order2Placed,
     placedAt: order2Placed,
     updatedAt: order2Ready,
@@ -429,7 +429,7 @@ export const INITIAL_ORDERS: Order[] = [
     ]
   },
   {
-    id: 'CB-20261018-0029',
+    id: 'SUK-20261018-0029',
     createdAt: order3Placed,
     placedAt: order3Placed,
     updatedAt: order3Collected,
@@ -482,7 +482,7 @@ export const INITIAL_STAFF_USERS: StaffUser[] = [
 ];
 
 export const INITIAL_SETTINGS: AppSettings = {
-  brandName: 'CampusBite',
+  brandName: 'SUK',
   operatingHours: '08:00 AM – 06:30 PM (Mon–Sat)',
   defaultPickupLeadMins: 10,
   platformFeeRs: 5,

@@ -3,7 +3,7 @@ import path from 'path';
 
 const files = {
   'package.json': `{
-  "name": "campusbite-pwa",
+  "name": "suk-pwa",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -114,12 +114,12 @@ export default {
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#14532D" />
-    <meta name="description" content="CampusBite — Skip the queue. Pre-order college canteen food from your classroom and pick it up hot." />
+    <meta name="description" content="SUK — Skip the queue. Pre-order college canteen food from your classroom and pick it up hot." />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <title>CampusBite — College Canteen Pre-Ordering PWA</title>
+    <title>SUK — College Canteen Pre-Ordering PWA</title>
   </head>
   <body class="bg-[#FAFAF7] dark:bg-[#0B1510] text-[#17211B] dark:text-gray-100 antialiased selection:bg-[#DCFCE7] selection:text-[#14532D]">
     <div id="root"></div>
@@ -136,8 +136,8 @@ export default {
 </svg>`,
 
   'public/manifest.webmanifest': `{
-  "name": "CampusBite — College Canteen Pre-Ordering",
-  "short_name": "CampusBite",
+  "name": "SUK — College Canteen Pre-Ordering",
+  "short_name": "SUK",
   "description": "Skip the queue. Order your favourites from the classroom and pick them up when they're ready.",
   "start_url": "/",
   "scope": "/",
@@ -154,7 +154,7 @@ export default {
   ]
 }`,
 
-  'public/sw.js': `const CACHE_NAME = 'campusbite-cache-v1';
+  'public/sw.js': `const CACHE_NAME = 'suk-cache-v1';
 const ASSETS = [
   '/',
   '/index.html',
@@ -782,14 +782,14 @@ export const INITIAL_DEMO_USERS: DemoStaffUser[] = [
 ];
 
 export const INITIAL_SETTINGS: AppSettings = {
-  brandName: 'CampusBite',
+  brandName: 'SUK',
   operatingHours: '08:30 AM – 05:30 PM (Mon–Sat)',
   defaultPickupLeadMins: 10,
   platformFeeRs: 5
 };
 
 export const CONTACT_CONFIG = {
-  supportEmail: 'demo-support@campusbite.edu.in (Placeholder)',
+  supportEmail: 'demo-support@suk.edu.in (Placeholder)',
   campusDesk: 'Student Activity Center, Desk 4, Main Quad (Demo)',
   helplineHours: 'Monday to Saturday, 8:30 AM – 5:30 PM IST',
   phone: '+91 (0821) 000-0000 (Demonstration Placeholder)'
@@ -1502,7 +1502,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       {isOffline && (
         <div className="bg-amber-500 text-black px-4 py-2 text-xs font-semibold flex items-center justify-center gap-2">
           <WifiOff className="w-4 h-4" />
-          You are currently offline. Viewing cached CampusBite menu & local browser orders.
+          You are currently offline. Viewing cached SUK menu & local browser orders.
         </div>
       )}
 
@@ -1512,7 +1512,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-[#14532D] dark:text-green-200 font-medium">
               <Download className="w-4 h-4 shrink-0" />
-              <span>Install <strong>CampusBite PWA</strong> on your home screen for instant classroom ordering & offline menu access.</span>
+              <span>Install <strong>SUK PWA</strong> on your home screen for instant classroom ordering & offline menu access.</span>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <button
@@ -1776,7 +1776,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">Support & Policies</h4>
             <ul className="space-y-2.5 text-sm">
-              <li><Link to="/about" className="hover:text-white transition-colors">About CampusBite</Link></li>
+              <li><Link to="/about" className="hover:text-white transition-colors">About SUK</Link></li>
               <li><Link to="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
               <li><Link to="/help" className="hover:text-white transition-colors">Help Center</Link></li>
               <li><Link to="/faq" className="hover:text-white transition-colors">FAQs</Link></li>
@@ -1933,7 +1933,7 @@ export const HomePage: React.FC = () => {
           <span className="text-xs font-bold uppercase tracking-widest text-brand-700 dark:text-brand-400">
             Zero Queue Workflow
           </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold mt-1">How CampusBite Works</h2>
+          <h2 className="text-2xl sm:text-3xl font-extrabold mt-1">How SUK Works</h2>
           <p className="text-sm text-[#667085] dark:text-gray-400 mt-2">
             Designed around academic timetables so you spend your break eating with friends, not standing at a billing counter.
           </p>
@@ -2815,7 +2815,7 @@ export const CartPage: React.FC = () => {
         <div className="w-16 h-16 rounded-3xl bg-[#DCFCE7] text-[#14532D] flex items-center justify-center mx-auto mb-4">
           <ShoppingBag className="w-8 h-8" />
         </div>
-        <h1 className="text-2xl font-extrabold">Your CampusBite cart is empty</h1>
+        <h1 className="text-2xl font-extrabold">Your SUK cart is empty</h1>
         <p className="text-sm text-[#667085] dark:text-gray-400 mt-2 mb-6">
           Browse live menus from Campus Central Canteen, Green Bowl Kitchen, or Campus Coffee House to schedule your break pickup.
         </p>
@@ -3302,7 +3302,7 @@ export const CheckoutPage: React.FC = () => {
             </span>
             <h3 className="text-xl font-extrabold">Demo Payment of ₹{total}</h3>
             <p className="text-xs text-[#667085] dark:text-gray-300 leading-relaxed">
-              No real money is transferred. Choose an outcome below to test how CampusBite handles successful or failed transactions:
+              No real money is transferred. Choose an outcome below to test how SUK handles successful or failed transactions:
             </p>
             <div className="grid grid-cols-1 gap-2.5 pt-2">
               <button
@@ -4211,7 +4211,7 @@ export const AdminDashboardPage: React.FC = () => {
           <span className="px-2.5 py-1 rounded bg-[#22C55E] text-[#0B2E1B] text-[10px] font-black uppercase">
             SaaS Multi-Canteen Admin Preview (Frontend Simulation)
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold mt-2">CampusBite Administration Console</h1>
+          <h1 className="text-2xl sm:text-3xl font-extrabold mt-2">SUK Administration Console</h1>
           <p className="text-xs text-green-200 mt-1">
             Manage demonstration canteens, sample directory listings, and reset browser localStorage state.
           </p>
@@ -4539,16 +4539,16 @@ export const AboutPage: React.FC = () => (
       <span className="text-xs font-bold uppercase tracking-widest text-brand-700 dark:text-brand-400">
         Project Concept & Vision
       </span>
-      <h1 className="text-3xl sm:text-4xl font-extrabold mt-1">About CampusBite</h1>
+      <h1 className="text-3xl sm:text-4xl font-extrabold mt-1">About SUK</h1>
     </div>
     <p className="text-base text-[#667085] dark:text-gray-300 leading-relaxed">
       Across college campuses, hundreds of students pour out of lecture halls simultaneously for a 15-to-20-minute break. Traditional canteen counters get overwhelmed with dual bottlenecks: first waiting in line to pay for a paper token, and then crowding around the kitchen pass waiting for food to be cooked.
     </p>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="bg-white dark:bg-[#122017] border border-gray-200 dark:border-green-900/40 rounded-2xl p-6">
-        <h3 className="font-bold text-lg mb-2">Why CampusBite Was Conceptualized</h3>
+        <h3 className="font-bold text-lg mb-2">Why SUK Was Conceptualized</h3>
         <p className="text-xs text-[#667085] dark:text-gray-400 leading-relaxed">
-          CampusBite decouples ordering from physical queuing. Students browse live menus before the bell rings, lock in a capacity-controlled 15-minute pickup slot, and walk straight to the express pickup counter when their order status turns Ready.
+          SUK decouples ordering from physical queuing. Students browse live menus before the bell rings, lock in a capacity-controlled 15-minute pickup slot, and walk straight to the express pickup counter when their order status turns Ready.
         </p>
       </div>
       <div className="bg-white dark:bg-[#122017] border border-gray-200 dark:border-green-900/40 rounded-2xl p-6">
@@ -4621,7 +4621,7 @@ export const ContactPage: React.FC = () => {
           </span>
           <h1 className="text-3xl font-extrabold mt-1">Contact Us</h1>
           <p className="text-xs text-[#667085] mt-2">
-            Have feedback on the CampusBite prototype or want to onboard a new college vendor?
+            Have feedback on the SUK prototype or want to onboard a new college vendor?
           </p>
         </div>
         <div className="space-y-4 text-xs">
@@ -4655,7 +4655,7 @@ export const ContactPage: React.FC = () => {
             <CheckCircle2 className="w-12 h-12 text-green-600 mx-auto" />
             <h3 className="text-lg font-extrabold">Demonstration Message Recorded Locally</h3>
             <p className="text-xs text-[#667085] max-w-md mx-auto">
-              Because CampusBite is running in frontend-only prototype mode without a backend mail server, no real email was dispatched.
+              Because SUK is running in frontend-only prototype mode without a backend mail server, no real email was dispatched.
             </p>
             <button
               onClick={() => {
@@ -4751,8 +4751,8 @@ const FAQ_ITEMS = [
     a: 'Canteen operators can toggle item availability in the Menu tab of the Canteen Dashboard. Sold-out items immediately display a badge and cannot be added to student carts.'
   },
   {
-    q: 'Can I install CampusBite as a Progressive Web App (PWA)?',
-    a: 'Yes! CampusBite includes a standard webmanifest and service worker. Use your browser’s "Install App" or "Add to Home Screen" action for standalone launch and offline menu caching.'
+    q: 'Can I install SUK as a Progressive Web App (PWA)?',
+    a: 'Yes! SUK includes a standard webmanifest and service worker. Use your browser’s "Install App" or "Add to Home Screen" action for standalone launch and offline menu caching.'
   }
 ];
 
@@ -4798,10 +4798,10 @@ export const HelpCenterPage: React.FC = () => (
   <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-6">
     <div className="flex items-center gap-2 text-brand-700 dark:text-brand-400">
       <HelpCircle className="w-6 h-6" />
-      <h1 className="text-3xl font-extrabold text-[#17211B] dark:text-white">CampusBite Help Center</h1>
+      <h1 className="text-3xl font-extrabold text-[#17211B] dark:text-white">SUK Help Center</h1>
     </div>
     <p className="text-sm text-[#667085]">
-      Quick guides for testing every part of the CampusBite college canteen pre-ordering prototype:
+      Quick guides for testing every part of the SUK college canteen pre-ordering prototype:
     </p>
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
       <div className="p-5 rounded-2xl bg-white dark:bg-[#122017] border border-gray-200 dark:border-green-900/40 space-y-2">
@@ -4837,7 +4837,7 @@ export const PolicyPage: React.FC<{ type: 'privacy' | 'terms' | 'refund' }> = ({
       <h1 className="text-3xl font-extrabold">{titles[type]}</h1>
       <div className="bg-white dark:bg-[#122017] border border-gray-200 dark:border-green-900/40 rounded-2xl p-6 space-y-3 text-xs text-[#667085] dark:text-gray-300 leading-relaxed">
         <p>
-          <strong>1. Local-Only Browser Storage:</strong> CampusBite is a frontend demonstration prototype. Any orders, cart items, profile names, or menu edits you create are saved strictly inside your browser's <code>localStorage</code> and are never transmitted to an external server.
+          <strong>1. Local-Only Browser Storage:</strong> SUK is a frontend demonstration prototype. Any orders, cart items, profile names, or menu edits you create are saved strictly inside your browser's <code>localStorage</code> and are never transmitted to an external server.
         </p>
         <p>
           <strong>2. Simulated Payments Only:</strong> No real payment gateway is connected. Selecting "Online Payment — Demo" or "Pay at Counter" simulates order states for academic and product demonstration purposes only.
@@ -4859,7 +4859,7 @@ export const OfflineFallbackPage: React.FC = () => {
       </div>
       <h1 className="text-3xl font-extrabold">Offline Mode & Cached PWA State</h1>
       <p className="text-sm text-[#667085] dark:text-gray-400 max-w-lg mx-auto">
-        CampusBite caches static application assets and preserves your local menu ({foods.length} dishes) and saved demo orders ({orders.length} orders) inside your browser even when campus Wi-Fi drops.
+        SUK caches static application assets and preserves your local menu ({foods.length} dishes) and saved demo orders ({orders.length} orders) inside your browser even when campus Wi-Fi drops.
       </p>
       <div className="flex justify-center gap-3">
         <Link to="/menu" className="px-5 py-2.5 rounded-xl bg-[#14532D] text-white text-xs font-bold">
@@ -4878,7 +4878,7 @@ export const NotFoundPage: React.FC = () => (
     <Compass className="w-12 h-12 text-brand-600 mx-auto" />
     <h1 className="text-3xl font-extrabold">404 — Page Not On The Menu</h1>
     <p className="text-xs text-[#667085]">
-      The route you visited doesn't exist in CampusBite. Head back to the main quad or explore the live canteen menu.
+      The route you visited doesn't exist in SUK. Head back to the main quad or explore the live canteen menu.
     </p>
     <div className="flex justify-center gap-3">
       <Link to="/" className="px-5 py-2.5 rounded-xl bg-[#14532D] text-white text-xs font-bold">
@@ -4978,4 +4978,4 @@ for (const [filePath, content] of Object.entries(files)) {
   console.log('Created:', filePath);
 }
 
-console.log('\\n✅ CampusBite PWA project extracted! Run:\\n  npm install\\n  npm run dev');
+console.log('\\n✅ SUK PWA project extracted! Run:\\n  npm install\\n  npm run dev');
